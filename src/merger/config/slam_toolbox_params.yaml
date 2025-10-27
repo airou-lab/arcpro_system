@@ -1,0 +1,48 @@
+slam_toolbox:
+  ros__parameters:
+
+    use_sim_time: false
+
+    odom_frame: "odom"
+    map_frame: "map"
+    base_frame: "base_link"
+    scan_topic: "/scan"
+
+    transform_timeout: 2.0
+    tf_buffer_duration: 30.0 # (seconds)
+
+    resolution: 0.05               # (meters) Resolution of the map. 5cm is a good default.
+    map_update_interval: 5.0       # (seconds) How often the map is republished.
+    max_laser_range: 25.0          # (meters) Max range of your LIDAR. Truncates scans beyond this.
+
+    # --- Scan Matcher ---
+    # How to match new scans to the map. 'ceres_scan_matcher' is the default and best.
+    scan_matcher_type: "ceres_scan_matcher"
+
+    # Ceres scan matching settings (don't touch unless you have issues)
+    ceres_scan_matcher:
+      occupied_space_weight: 20.0
+      translation_weight: 10.0
+      rotation_weight: 1.0
+      covariance_scale: 0.001
+      use_nonmonotonic_steps: true
+      max_num_iterations: 50
+      max_solver_time_in_seconds: 0.04
+
+    # --- Loop Closure & Pose Graph ---
+    # These control how often the robot tries to "close loops" (i.e., recognize
+    # a place it's been before) and correct the map.
+    do_loop_closing: true
+    loop_search_maximum_distance: 10.0  # (meters) How far to search for a loop closure.
+    minimum_travel_distance: 0.2        # (meters) Min distance robot must travel to add a new node.
+
+    # --- General ---
+    use_scan_matching: true             # Must be true to do SLAM.
+    throttle_scans: 1                   # Process every 1 scan. Increase if CPU is too high.
+
+    solver_plugin: "solver_plugins::CeresSolver"
+
+    ceres_solver_options:
+      use_nonmonotonic_steps: true
+      max_num_iterations: 50
+      num_threads: 1
