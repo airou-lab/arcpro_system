@@ -47,7 +47,7 @@ controller_server_rclcpp_node:
 
 map_server:
   ros__parameters:
-    yaml_filename: "/home/airou/PycharmProjects/arcpro_rl_base_case_waypointer/install/merger/share/merger/res/minicity.yaml"
+    yaml_filename: "/home/airou/PycharmProjects/arcpro_rl_base_case_waypointer/src/merger/res/minicity.yaml"
     frame_id: "map"
     topic_name: "map"
     use_sim_time: false
