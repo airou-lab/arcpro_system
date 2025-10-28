@@ -2,12 +2,12 @@
   # general parameters shared by all vesc-related nodes
   ros__parameters:
     # erpm (electrical rpm) = speed_to_erpm_gain * speed (meters / second) + speed_to_erpm_offset
-    speed_to_erpm_gain: 4614.0
+    speed_to_erpm_gain: 5294.0
     speed_to_erpm_offset: 0.0
 
     # servo value (0 to 1) =  steering_angle_to_servo_gain * steering angle (radians) + steering_angle_to_servo_offset
     steering_angle_to_servo_gain: -1.2135
-    steering_angle_to_servo_offset: 0.5700
+    steering_angle_to_servo_offset: 0.5705
     #higher steer angle = more on left wheel, lower = more on right
 
     port: /dev/ttyACM0
@@ -21,8 +21,8 @@
     speed_max: 23250.0
     position_min: 0.0
     position_max: 0.0
-    servo_min: 0.15
-    servo_max: 0.85
+    servo_min: 0.0
+    servo_max: 2.00
 
 # No longer needed, all parameters are shared
 # ackermann_to_vesc_node:
@@ -35,8 +35,8 @@ vesc_to_odom_node:
     # publish odom to base link tf
     publish_tf: true
     use_servo_cmd_to_calc_angular_velocity: true
-    # car wheelbase is about 25cm
-    wheelbase: .25
+    # car wheelbase is about 9.5in
+    wheelbase: 0.2413
 
 # No longer needed, all parameters are shared
 # vesc_driver:
