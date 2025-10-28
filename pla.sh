@@ -1,0 +1,3 @@
+./vesc.sh &
+
+./mockodom.sh
