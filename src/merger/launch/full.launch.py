@@ -13,7 +13,7 @@ def generate_launch_description():
         executable='twist_to_ackermann',
         name='twist_to_ackermann',
         parameters=[
-            {'wheelbase': 0.33},
+            {'wheelbase': 0.4826},#manually measured wheelbase was 9.5in
             {'use_stamps': False}
         ],
         remappings=[
@@ -32,6 +32,14 @@ def generate_launch_description():
 #        )],
         output='screen'
     )
+    robot_localization_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_node',
+        output='screen',
+        parameters=[os.path.join("merger", 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
+        )
+
 
     return LaunchDescription([
         launch.actions.DeclareLaunchArgument(name='use_sim_time', default_value='false'),
@@ -62,6 +70,13 @@ def generate_launch_description():
                 'no_lidar_bringup_launch.py'
             ])
         ),
+        IncludeLaunchDescription(
+            PathJoinSubstitution([
+                FindPackageShare('realsense2_camera'),
+                'launch',
+                'rs_launch.py'
+            ])
+        ),
         #ldiar fixme, currently doesnt work with the stack, need to bringup seperatly..
 #ros2 launch launch ydlidar_launch.py
         # IncludeLaunchDescription(
@@ -80,5 +95,6 @@ def generate_launch_description():
         #     ])
         # ),
         rviz_node,
-        twist_to_ackermann
+        twist_to_ackermann,
+        robot_localization_node
     ])
