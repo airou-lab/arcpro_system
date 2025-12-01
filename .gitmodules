@@ -1,0 +1,3 @@
+[submodule "src/arcpro_rl_sim/arc_rl_interface"]
+	path = src/arcpro_rl_sim/arc_rl_interface
+	url = git@github.com:airou-lab/arc_rl_interface.git

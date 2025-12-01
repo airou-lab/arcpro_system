@@ -1,3 +1,5 @@
+# Warning! Autogen code!
+
 import rclpy
 from rclpy.node import Node
 from ackermann_msgs.msg import AckermannDrive, AckermannDriveStamped
