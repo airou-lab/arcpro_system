@@ -7,13 +7,14 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
+
 def generate_launch_description():
     twist_to_ackermann = Node(
         package='twist_to_ackermann',
         executable='twist_to_ackermann',
         name='twist_to_ackermann',
         parameters=[
-            {'wheelbase': 0.4826},#manually measured wheelbase was 9.5in
+            {'wheelbase': 0.4826},  # manually measured wheelbase was 9.5in
             {'use_stamps': False}
         ],
         remappings=[
@@ -25,11 +26,11 @@ def generate_launch_description():
         package='rviz2',
         executable='rviz2',
         name='rviz2',
-#        arguments=['-d', os.path.join(
-#            FindPackageShare('waypoint_with_map').find('waypoint_with_map'),
-#            'rviz',
-#            'waypointer.rviz'  # your rviz config file
-#        )],
+        #        arguments=['-d', os.path.join(
+        #            FindPackageShare('waypoint_with_map').find('waypoint_with_map'),
+        #            'rviz',
+        #            'waypointer.rviz'  # your rviz config file
+        #        )],
         output='screen'
     )
     robot_localization_node = Node(
@@ -38,8 +39,7 @@ def generate_launch_description():
         name='ekf_node',
         output='screen',
         parameters=[os.path.join("merger", 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
-        )
-
+    )
 
     return LaunchDescription([
         launch.actions.DeclareLaunchArgument(name='use_sim_time', default_value='false'),
@@ -55,12 +55,12 @@ def generate_launch_description():
             launch_arguments={
                 'use_collision_monitor': 'False',
                 'params_file': PathJoinSubstitution([
-                   FindPackageShare('merger'),
-                   'config',
-                   'nav2.yaml'
+                    FindPackageShare('merger'),
+                    'config',
+                    'nav2.yaml'
                 ]),
                 'use_sim_time': 'false',
-                'use_docking': 'False' ,
+                'use_docking': 'False',
             }.items()
         ),
         IncludeLaunchDescription(
@@ -77,8 +77,8 @@ def generate_launch_description():
                 'rs_launch.py'
             ])
         ),
-        #ldiar fixme, currently doesnt work with the stack, need to bringup seperatly..
-#ros2 launch launch ydlidar_launch.py
+        # ldiar fixme, currently doesnt work with the stack, need to bringup seperatly..
+        # ros2 launch launch ydlidar_launch.py
         # IncludeLaunchDescription(
         #     PathJoinSubstitution([
         #         FindPackageShare('ydlidar_ros2_driver'),

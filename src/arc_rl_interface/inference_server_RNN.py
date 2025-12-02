@@ -11,15 +11,11 @@ import argparse
 import numpy as np
 from sb3_contrib import RecurrentPPO
 from live_unity_env import LiveUnityEnv, UnityEnvConfig
-import sys
-import os
-# Assuming 'policies' is relative to your project's root 'arcpro_rl_base_case_waypointer'
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--model", type=str, required=True)
-    p.add_argument("--host", type=str,  default="127.0.0.1")
+    p.add_argument("--host", type=str, default="127.0.0.1")
     p.add_argument("--port", type=int, default=5556)
     p.add_argument("--img_size", type=int, nargs=2, default=[84, 84])
     p.add_argument("--max_steps", type=int, default=500)
