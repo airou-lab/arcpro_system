@@ -25,6 +25,8 @@ setup(
     entry_points={
         'console_scripts': [
             'ackermann_bridge = bridge.ackermann_bridge:main',
+            'ros_to_tcp_bridge = bridge.ros_to_tcp_bridge:main',
+            'real_robot_bridge = bridge.real_robot_bridge:main',
         ],
     },
 )

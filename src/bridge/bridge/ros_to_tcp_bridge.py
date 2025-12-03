@@ -16,15 +16,12 @@ import threading
 
 # --- CONFIGURATION ---
 HOST = '0.0.0.0'  # Listen on all interfaces
-PORT = 5556  # Must match your agent's port
-img_size = (84, 84)  # Must match your trained model input
-
-# Real Car Limits (Adjust these!)
+PORT = 5556
+img_size = (84, 84) # double check again..
 MAX_SPEED = 0.5  # We can change this later if it becomes weird
 MAX_STEER = 0.4  # Radians (at steer=1.0) ~23 degrees
 
-# Topic Names (Check these on your car!)
-CAMERA_TOPIC = '/camera/camera/color/image_raw'  # or /usb_cam/image_raw
+CAMERA_TOPIC = '/camera/camera/color/image_raw'  #confirm this later.. (realsense toipic
 DRIVE_TOPIC = '/drive'
 
 
@@ -37,22 +34,22 @@ class RealRobotBridge(Node):
         self.latest_frame = None
         self.frame_lock = threading.Lock()
 
-        # Subscriber: Listen to the real camera
+        # Sub
         self.create_subscription(Image, CAMERA_TOPIC, self.image_callback, 1)
 
-        # Publisher: Talk to the VESC/Motor
+        # Pub
         self.drive_pub = self.create_publisher(AckermannDriveStamped, DRIVE_TOPIC, 1)
 
         self.get_logger().info(f"Bridge Node Started. Listening for Camera on: {CAMERA_TOPIC}")
 
     def image_callback(self, msg):
-        """Continually updates the latest frame from the camera."""
+        """update frame to socket"""
         try:
-            # Convert ROS Image -> OpenCV Image (BGR)
+            # Convert ROS Image -> OpenCV Image
             cv_img = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
-            # Resize to what the Agent expects (84x84)
+            # Resize to agent expected size
             resized = cv2.resize(cv_img, img_size)
-            # Encode to JPEG (The protocol demands JPEG bytes)
+            # port to  JPEG
             _, jpeg_data = cv2.imencode('.jpg', resized, [int(cv2.IMWRITE_JPEG_QUALITY), 80])
 
             with self.frame_lock:
@@ -111,7 +108,7 @@ def run_tcp_server(ros_node):
             if not data: break
 
 
-            if len(data) == 1 and data == b'R':# Start command is only length 1 (or reset)
+            if len(data) == 1 and data == b'R':# Length 1 means RST/end episopde
                 print("Received RST cmd (1 byte). Starting episode.")
                 # Agent wants a frame immediately after reset
                 pass
