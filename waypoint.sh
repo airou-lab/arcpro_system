@@ -1,4 +1,4 @@
-ros2 launch merger full.launch.py
+ros2 launch waypointer full.launch.py
 #sleep 5
 #
 #ros2 topic pub /drive ackermann_msgs/msg/AckermannDriveStamped \

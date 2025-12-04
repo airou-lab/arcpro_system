@@ -24,7 +24,6 @@ MAX_STEER = 0.4  # Radians (at steer=1.0) ~23 degrees
 CAMERA_TOPIC = '/camera/camera/color/image_raw'  #confirm this later.. (realsense toipic
 DRIVE_TOPIC = '/drive'
 
-
 class RealRobotBridge(Node):
     def __init__(self):
         super().__init__('unity_impersonator_bridge')
@@ -106,7 +105,6 @@ def run_tcp_server(ros_node):
 
             data = conn.recv(8)
             if not data: break
-
 
             if len(data) == 1 and data == b'R':# Length 1 means RST/end episopde
                 print("Received RST cmd (1 byte). Starting episode.")

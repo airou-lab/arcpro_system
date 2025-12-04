@@ -38,7 +38,7 @@ def generate_launch_description():
         executable='ekf_node',
         name='ekf_node',
         output='screen',
-        parameters=[os.path.join("merger", 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
+        parameters=[os.path.join("waypointer", 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     return LaunchDescription([
@@ -55,7 +55,7 @@ def generate_launch_description():
             launch_arguments={
                 'use_collision_monitor': 'False',
                 'params_file': PathJoinSubstitution([
-                    FindPackageShare('merger'),
+                    FindPackageShare('waypointer'),
                     'config',
                     'nav2.yaml'
                 ]),
