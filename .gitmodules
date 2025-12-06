@@ -9,3 +9,7 @@
 [submodule "src/ydLidar"]
     path = src/base/ylidar/YDLidar-SDK
     url = git@github.com:airou-lab/ydLidar.git
+
+[submodule "src/f1tenth_system"]
+    path = src/base/f1tenth_system
+    url = git@github.com:airou-lab/arcpro_system.git
