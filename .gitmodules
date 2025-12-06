@@ -1,3 +1,11 @@
 [submodule "src/arcpro_rl_sim/arc_rl_interface"]
-	path = src/arcpro_rl_sim/arc_rl_interface
+	path = src/examples/arc_rl_interface
 	url = git@github.com:airou-lab/arc_rl_interface.git
+
+[submodule "src/twist_to_ackermann"]
+    path = src/base/twist_to_ackermann/twist_to_ackermann
+    url = git@github.com:airou-lab/twist_to_ackermann.git
+
+[submodule "src/ydLidar"]
+    path = src/base/ylidar/YDLidar-SDK
+    url = git@github.com:airou-lab/ydLidar.git
