@@ -1,3 +1,8 @@
+To clone run:
+```bash
+git clone --recurse-submodules -j8  git@github.com:airou-lab/arcpro_system.git
+```
+
 https://airou-lab.github.io/arcpro_ros2_website/
 
 (To add build passing tags)
