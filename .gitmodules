@@ -2,14 +2,14 @@
     path = src/examples/arc_rl_interface
     url = git@github.com:airou-lab/arc_rl_interface.git
 
-[submodule "src/twist_to_ackermann"]
-    path = src/base/twist_to_ackermann
-    url = git@github.com:airou-lab/twist_to_ackermann.git
-
-[submodule "src/ydLidar"]
-    path = src/base/ylidar/YDLidar-SDK
-    url = git@github.com:airou-lab/ydLidar.git
-
 [submodule "src/f1tenth_system"]
     path = src/base/f1tenth_system
     url = git@github.com:airou-lab/arcpro_system.git
+
+[submodule "src/base/YDLidar-SDK"]
+	path = src/base/YDLidar-SDK
+	url = git@github.com:airou-lab/ydLidar.git
+
+[submodule "src/base/f1tenth_to_arcpro"]
+	path = src/base/f1tenth_to_arcpro
+	url = git@github.com:airou-lab/arcpro_system.git
