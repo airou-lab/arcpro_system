@@ -17,3 +17,6 @@
 	path = src/base/f1tenth_to_arcpro
 	url = git@github.com:airou-lab/f1tenth_to_arcpro.git
 
+[submodule "src/base/twist_to_ackermann"]
+	path = src/base/twist_to_ackermann
+	url = git@github.com:airou-lab/twist_to_ackermann.git
