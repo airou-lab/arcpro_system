@@ -12,3 +12,11 @@ https://airou-lab.github.io/arcpro_ros2_website/
 (To add current maintainer)
 
 [//]: # (git submodule add -f git@github.com:airou-lab/twist_to_ackermann.git src/base/twist_to_ackermann)
+
+# Running Examples:
+```bash
+# waypointer example:
+ ./waypoint.sh 
+ # RL example:
+./arcpro_rl.sh 
+```
