@@ -1,4 +1,9 @@
-See: https://airou-lab.github.io/arcpro_ros2_website/
+https://airou-lab.github.io/arcpro_ros2_website/
+
+To clone run:
+```bash
+git clone --recurse-submodules -j8  git@github.com:airou-lab/arcpro_system.git
+```
 
 (To add build passing tags)
 
@@ -13,4 +18,13 @@ Maintainer until Dec 2027: arikak@ou.edu
 When building on new device run in project root:
 ```bash
 rosdep install --from-paths src -y --ignore-src
+```
+
+
+# Running Examples:
+```bash
+# waypointer example:
+ ./waypoint.sh 
+ # RL example:
+./arcpro_rl.sh 
 ```
