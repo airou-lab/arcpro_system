@@ -1,0 +1,1 @@
+ros2 bag play my_map_bag --clock
