@@ -28,5 +28,5 @@ ament_package()
 install(DIRECTORY
   launch res config
   DESTINATION share/${PROJECT_NAME}/
-  DIRECTORY
+
 )
