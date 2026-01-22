@@ -1,1 +1,0 @@
-  ros2 bag record -o my_map_bag --topics /scan /tf /tf_static /odom
