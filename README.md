@@ -28,3 +28,11 @@ rosdep install --from-paths src -y --ignore-src
  # RL example:
 ./arcpro_rl.sh 
 ```
+
+to just view the xacro file, run 
+```bash
+/home/arika/Documents/arcpro/arcpro_system/src/base/robot urdf models/rsp_xacro_test.sh
+
+# AND in host terminal for gui
+ros2 run joint_state_publisher_gui joint_state_publisher_gui
+```
