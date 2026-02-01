@@ -1,4 +1,4 @@
-For full documentation please visit the docs site: https://airou-lab.github.io/arcpro_ros2_website/
+For full documentation please visit the docs site: https://airou-lab.github.io/general_wiki_website/
 
 To clone run:
 ```bash
