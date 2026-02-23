@@ -5,6 +5,8 @@
 /log/f1tenth_ws
 
 # Also ignore any nested install/build/log folders in subprojects
+**/.planning/
+gemni.sh
 **/build/
 **/install/
 **/log/
@@ -21,5 +23,7 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+src/examples/ARCPro_RL/arc_rl_isacc_policy/venv_isaac/
 
 *.rst
