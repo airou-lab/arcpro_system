@@ -27,3 +27,4 @@ gemni.sh
 src/examples/ARCPro_RL/arc_rl_isacc_policy/venv_isaac/
 
 *.rst
+/GEMINI.md
