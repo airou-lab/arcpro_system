@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>ARCPro System - GSD Progress Report</title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>ARCPro System</h1>
+					<h3>GSD Progress & Roadmap</h3>
+					<p>
+						<small>Project Update: March 2026</small>
+					</p>
+				</section>
+
+				<section>
+					<h2>Pre-Meeting: Recent Progress</h2>
+					<ul>
+						<li class="fragment"><strong>URDF Migration:</strong> Switched to f1tenth URDF (Mushr model was ROS1-based and incompatible).</li>
+						<li class="fragment"><strong>Physics Fixes:</strong> Resolved road collision issues where wheels clipped through terrain.</li>
+						<li class="fragment"><strong>Sensors:</strong> Camera setup successfully implemented.</li>
+						<li class="fragment"><strong>Integration:</strong> Completed the full Policy-to-Sim node pipeline.</li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+						<h2>Goals for Next Week</h2>
+						<p><strong>TLDR:</strong> Policy-driven robot and sim training visualization.</p>
+					</section>
+					<section>
+						<h3>Policy Validation</h3>
+						<ul>
+							<li>Verify policy in Isaac Sim (currently driving slowly).</li>
+							<li>Debug slow performance (investigating control/tuning).</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Simulation Refinement</h3>
+						<ul>
+							<li>Develop high-fidelity road environments.</li>
+							<li>Scale assets to correctly fit the car dimensions.</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Vision Testing</h3>
+						<ul>
+							<li>Verify camera output stream.</li>
+							<li>Align outputted images with model input requirements.</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Future Tickets (Week After++)</h2>
+					</section>
+					<section>
+						<h3>Sim2Real Node</h3>
+						<ul>
+							<li>Deploy image processing node on NUC.</li>
+							<li>Fallback: Minify model or migrate to Orin Nano.</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Scaling Training</h3>
+						<ul>
+							<li>Parallelize training using Isaac Sim's native support.</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Documentation & Infrastructure</h3>
+						<ul>
+							<li>Host guides on <a href="https://airou-lab.github.io/general_wiki_website/">Quartz Wiki</a>.</li>
+							<li>Ansible Playbook: Automate NUC instance generation (collaboration with Sam).</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<h2>Summary</h2>
+					<p>Transition from URDF troubleshooting to policy validation and hardware preparation.</p>
+				</section>
+			</div>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/markdown/markdown.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+		<script>
+			Reveal.initialize({
+				hash: true,
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
