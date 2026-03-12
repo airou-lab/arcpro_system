@@ -9,19 +9,15 @@ This document tracks the strategic and tactical progression of the ARCPro Reinfo
 - [x] **1.3: Track Alignment** - Restored OpenStreetUSD geometry and spawn orientations.
 - [x] **1.3.5: Vision & Physics Hardening** - Implemented SDF Collisions and standardized GlobalLight.
 
-## Phase 2: Training & Policy Development (PENDING VERIFICATION)
-- [ ] **2.1: Camera Pipeline** - Implemented 360p -> 160x90 downsampling.
-- [ ] **2.1.5: Reward Strategy** - Implemented "Passivity Trap" penalty.
-- [ ] **2.2: Stability Patching** - Fixed HPPO LSTM tuple bug.
-- [ ] **2.3: Initial Training** - Completed 200k step run (Identified scale bug).
-- [ ] **2.4: Documentation & Cleanup** - Audited READMEs and purged debug scripts.
-- [ ] **2.5: Metric Asset Calibration** - Authored verified Atomic Digital Twin (25cm WB, 4.092kg).
-- [ ] **2.6: High-Fidelity Retraining** - Re-run the 200,000-step training using the verified metric model.
-- [ ] **2.7: Inference Verification** - Confirm 80m+ autonomous lap completion.
-- [ ] **2.8: Visual Analytics** - Develop `run_gui_inference.py` with HUD.
+## Phase 2: Isaac Lab Migration (IMMEDIATE PRIORITY)
+- [ ] **2.1: Task Definition** - Refactor USD into Isaac Lab schema (PhysX/Articulation schemas).
+- [ ] **2.2: Manager Configuration** - Implement Observation, Action, and Reward Managers.
+- [ ] **2.3: Vectorization** - Transition to multi-robot parallel training (128+ agents).
+- [ ] **2.4: Infrastructure Verification** - Achieve stable 1M+ step training without simulation crashes.
 
-## Phase 3: Isaac Lab Migration (IMMEDIATE PRIORITY)
-- [ ] **3.1: Task Definition** - Refactor USD into Isaac Lab schema (PhysX/Articulation schemas).
-- [ ] **3.2: Manager Configuration** - Implement Observation, Action, and Reward Managers.
-- [ ] **3.3: Vectorization** - Transition to multi-robot parallel training (128+ agents).
-- [ ] **3.4: Verification** - Achieve stable 1M+ step training without simulation crashes.
+## Phase 3: Training & Policy Development (PENDING INFRASTRUCTURE)
+- [ ] **3.1: Camera Pipeline** - Port 360p -> 160x90 downsampling to Tiled Rendering.
+- [ ] **3.2: Reward Strategy** - Implement Gaussian "Magnetic" Lane rewards.
+- [ ] **3.3: High-Fidelity Retraining** - Execute 200,000+ step training in vectorized Isaac Lab env.
+- [ ] **3.4: Inference Verification** - Confirm 80m+ autonomous lap completion.
+- [ ] **3.5: Visual Analytics** - Develop Isaac Lab compliant GUI/HUD for real-time debugging.

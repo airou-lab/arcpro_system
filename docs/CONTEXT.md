@@ -1,13 +1,10 @@
-# Historical Context Summary (Phases 1 & 2)
+# Historical Context Summary (Phase 1 Legacy)
 
-> **LEGACY:** This document minifies the context from Phases 1 and 2 for historical reference.
+> **LEGACY:** This document minifies the context from the initial Phase 1 development for historical reference.
 
-## Phase 1: Foundations
-*   **Goal:** Establish ROS2 connectivity and source high-fidelity F1Tenth assets.
-*   **Result:** Verified track geometry and spawn orientations in `openStreetUSD`.
-
-## Phase 2: Direct API Development
-*   **Goal:** Train HPPO policy using Isaac Sim Direct API.
-*   **Bottleneck:** Complex 34-joint robot caused persistent Segmentation Faults and memory instability.
+## Phase 1: Foundations & Direct API Development
+*   **Initial Goal:** Establish ROS2 connectivity and train HPPO policy using Isaac Sim Direct API.
+*   **Outcome:** Verified track geometry and spawn orientations in `openStreetUSD`.
+*   **Bottleneck:** Complex 34-joint robot caused persistent Segmentation Faults and memory instability in the legacy Direct API.
 *   **Asset Repair:** Identified and corrected a 100x scale error in joint local positions within `F1Tenth_Metric_Baked.usd`.
-*   **Decision:** Moved to Phase 3 (Isaac Lab) to resolve infrastructure limitations.
+*   **Strategic Shift:** Moved Isaac Lab migration to Phase 2 to resolve infrastructure limitations before continuing training.
