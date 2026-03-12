@@ -1,38 +1,33 @@
-# ARCPro Reinforcement Learning with Isaac Sim
+# ARCPro Reinforcement Learning
 
-This project integrates a Reinforcement Learning (RL) policy with an NVIDIA Isaac Sim robot model using ROS2 as a bridge.
+This directory contains the high-performance Reinforcement Learning (RL) stack for the ARCPro system, utilizing NVIDIA Isaac Sim and the Stable Baselines3 framework.
 
-## Project Structure
+## Project Architecture
 
-- **`arc_rl_isacc_sim/`**: Contains simulation assets and scripts.
-    - `isacc_sim_usd/`: USD world and robot models.
-    - `setup_ros2_bridge.py`: Script to generate the Action Graph in Isaac Sim.
-    - `launch_isaac_ros2.py`: Automated launcher for Isaac Sim with ROS2 bridge.
-- **`arc_rl_isacc_policy/`**: Contains the RL environment and inference logic.
-    - `isaac_ros2_env.py`: Gymnasium-compatible environment interface.
-    - `verify_policy_link.py`: Plumbing test script for environment/sim interaction.
+- **`arc_rl_isacc_sim/`**: Isaac Sim environment logic and digital twin assets.
+    - `openStreetUSD/`: USD world models and track geometry.
+    - `run_inference.py`: Standard inference script for model verification.
+- **`arc_rl_isacc_policy/`**: RL policy definitions and training protocols.
+    - `isaac_direct_env.py`: Fast Direct-API Gymnasium environment.
+    - `policies/`: Custom hierarchical and recurrent neural network architectures.
+    - `train_policy_ros2.py`: Training entry point (supports both Direct and ROS2 modes).
 
-## Current Setup & Findings
+## Key Features
 
-### Isaac Sim Configuration
-- **Robot Path**: `/mushr_tx2/mushr_fixed/base_footprint`
-- **Articulation Root**: Located at the base footprint.
-- **Joint Names**:
-    - Steering: `front_left_wheel_steer`, `front_right_wheel_steer`
-    - Throttle: `front_left_wheel_throttle`, `front_right_wheel_throttle`, `back_left_wheel_throttle`, `back_right_wheel_throttle`
+## Phase 3: Isaac Lab Migration (Active)
+We are currently migrating from the Direct API to **Isaac Lab** to resolve simulation stability issues and enable vectorized training.
 
-### Known Issues
-- **Physical Movement**: The robot currently does not move despite receiving ROS2 commands. 
-    - **Hypothesis**: Joints are configured with `acceleration` drive type and high stiffness in the USD, which may conflict with the `AckermannController` outputs.
-    - **Action Graph**: Some warnings persist in the generated graph that require manual refinement in the Isaac Sim GUI.
+- **Manager-Based RL:** Transitioning to modular Reward, Observation, and Action managers.
+- **Massive Vectorization:** Target throughput of 2,000+ FPS using parallel agents.
+- **Improved Stability:** Leveraging hardened Isaac Lab schemas for the 34-joint ARCPro robot.
 
-## Quick Start (Manual Setup)
+## Getting Started
 
-1. Open Isaac Sim and load `World0.usd`.
-2. Open **Window -> Script Editor**.
-3. Copy and run the contents of `arc_rl_isacc_sim/setup_ros2_bridge.py`.
-4. Press **Play** in Isaac Sim.
-5. In a terminal, run the verification script:
-   ```bash
-   python3 arc_rl_isacc_policy/verify_policy_link.py
-   ```
+To run a verification lap with the pre-trained model:
+```bash
+./arcpro_rl.sh
+```
+
+For detailed reward and training information, see:
+- [Policy Documentation](arc_rl_isacc_policy/README.md)
+- [Reward Architectures](arc_rl_isacc_policy/README_REWARDS.md)

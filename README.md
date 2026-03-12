@@ -29,14 +29,15 @@ rosdep install --from-paths src -y --ignore-src
 ./arcpro_rl.sh 
 ```
 
-## Reinforcement Learning (Direct API)
-The ARCPro RL system uses a high-performance Direct API environment for training and inference, bypassing ROS2 for maximum physics stability.
+## Reinforcement Learning (Isaac Lab - Phase 3)
+The ARCPro RL system is currently migrating to **Isaac Lab** to enable massive parallel training and resolve simulation stability bottlenecks.
 
-- **Environment:** `src/examples/ARCPro_RL/arc_rl_isacc_policy/isaac_direct_env.py`
-- **Reward Strategies:** Multiple reward architectures (Original Evolution vs. Hybrid Racer) are supported. [See README_REWARDS.md for details](src/examples/ARCPro_RL/arc_rl_isacc_policy/README_REWARDS.md).
-- **Inference:** `src/examples/ARCPro_RL/arc_rl_isacc_sim/run_inference.py`
+- **Status:** Phase 3 Migration in Progress.
+- **Goal:** Vectorized training with 128+ agents using the Manager-Based RL API.
+- **Digital Twin:** Verified metric asset (25cm WB, 4.092kg) calibrated for high-fidelity physics.
 
-## Simulation & Hardware Alignment (Digital Twin)
+### Simulation & Hardware Alignment (Digital Twin)
+The simulation model has been meticulously calibrated to match ARCPro hardware for Zero-Shot Sim2Real transfer.
 
 The F1Tenth simulation model in `src/examples/ARCPro_RL/arc_rl_isacc_sim/f1tenth_trainer/assets/F1Tenth.usd` has been refactored to match exact ARCPro hardware specifications for Zero-Shot Sim2Real transfer.
 
@@ -64,7 +65,7 @@ The following refinements were applied to ensure reliable data flow and training
 
 to just view the xacro file, run 
 ```bash
-/home/arika/Documents/arcpro/arcpro_system/src/base/robot urdf models/rsp_xacro_test.sh
+./src/base/robot/urdf/models/rsp_xacro_test.sh
 
 # AND in host terminal for gui
 ros2 run joint_state_publisher_gui joint_state_publisher_gui

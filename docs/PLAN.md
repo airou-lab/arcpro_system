@@ -1,15 +1,15 @@
-# Phase 3 Plan: Sim2Real Bridge (ROS2 Integration)
+# Phase 3 Plan: Isaac Lab Migration (Parallel Training)
 
 ## Objective
-Develop a bridge node that abstracts the policy from the specific environment, allowing it to control either the simulation (via ROS2 Bridge) or the real ARCPro robot (via VESC/Sensors).
+Migrate the single-robot Direct API environment to Isaac Lab to enable multi-robot vectorized training, significantly increasing training throughput.
 
 ## Tasks
-- [ ] Implement a standalone ROS2 Node `policy_bridge_node.py`.
-- [ ] Subscribe to standard ROS2 topics: `/camera/image_raw`, `/vehicle_state`.
-- [ ] Publish standard Ackermann commands: `/ackermann_cmd`.
-- [ ] Ensure the node can load the SB3 model and run inference at a stable frequency.
-- [ ] Test integration by switching Isaac Sim back to using its ROS2 Bridge and verifying the policy still works.
+- [ ] Define Isaac Lab `Asset` schemas for the 34-joint ARCPro robot.
+- [ ] Implement `ARCProTask` inheriting from `RLTask` or `DirectRLEnv` in Isaac Lab.
+- [ ] Port the verified `SimpleLaneDetector` reward logic to the Isaac Lab task.
+- [ ] Configure `Hydra` for experiment management and scaling.
+- [ ] Train a vectorized policy with 128+ parallel robots.
 
 ## Success Criteria
-- Policy can control the robot over network/ROS2 topics.
-- System is ready for real-world deployment on the ARCPro robot.
+- Policy achieves same or better performance than Phase 2.6.
+- Training time for 1M steps reduced by >10x via vectorization.
