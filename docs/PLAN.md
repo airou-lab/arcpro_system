@@ -6,7 +6,7 @@ Migrate the single-robot Direct API environment to Isaac Lab to enable multi-rob
 ## Tasks
 - [ ] Define Isaac Lab `Asset` schemas for the 34-joint ARCPro robot.
 - [ ] Implement `ARCProTask` inheriting from `RLTask` or `DirectRLEnv` in Isaac Lab.
-- [ ] Port the verified `SimpleLaneDetector` reward logic to the Isaac Lab task.
+- [ ] Port vision-based lane reward logic to the Isaac Lab task.
 - [ ] Configure `Hydra` for experiment management and scaling.
 - [ ] Train a vectorized policy with 128+ parallel robots.
 
