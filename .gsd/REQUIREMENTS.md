@@ -1,12 +1,6 @@
 # Requirements
 
 ## Active
-- **R001**: **Missing M002 S02 Summary**
-  - **Status**: Active
-  - **Class**: documentation
-  - **Description**: S02 completed its tasks but the summary was never written.
-  - **Owner**: M003/S01
-  - **Source**: Execution (M002 failure)
 - **R002**: **Physical 10-Lap Verification**
   - **Status**: Active
   - **Class**: feature
@@ -15,7 +9,12 @@
   - **Source**: User (M002 failure fix)
 
 ## Validated
-(None)
+- **R001**: **Missing M002 S02 Summary**
+  - **Status**: Validated
+  - **Class**: documentation
+  - **Description**: S02 completed its tasks but the summary was never written.
+  - **Owner**: M003/S01
+  - **Source**: Execution (M002 failure)
 
 ## Deferred
 (None)

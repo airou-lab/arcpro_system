@@ -12,7 +12,7 @@
 
 ## Slices
 
-- [ ] **S01: M002 Documentation Cleanup** `risk:low` `depends:[]`
+- [x] **S01: M002 Documentation Cleanup** `risk:low` `depends:[]`
   > After this: The missing S02 summary from M002 is written based on its completed tasks.
 
 - [ ] **S02: Physical Verification Loop Integration** `risk:high` `depends:[]`
