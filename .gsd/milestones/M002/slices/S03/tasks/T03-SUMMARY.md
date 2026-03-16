@@ -2,6 +2,8 @@
 id: T03
 title: Hook HUD initialization into ARCProEnvCfg if enabled.
 status: done
+observability_surfaces:
+  - Console log indicating if HUD is enabled/disabled by config.
 ---
 
 ### Summary
@@ -12,6 +14,10 @@ Successfully hooked the `ARCProHUD` into the Isaac Lab environment lifecycle via
 - **Custom Environment Class**: Created `src/examples/ARCPro_RL/arc_rl_isacc_sim/arcproLab/arcpro_env.py` containing the `ARCProEnv` class. This class inherits from `ManagerBasedRLEnv` and overrides `__init__`, `step`, and `reset` to manage the HUD instance.
 - **Gym Registration**: Created `src/examples/ARCPro_RL/arc_rl_isacc_sim/arcproLab/__init__.py` to register the `ARCPro-v0` environment. Used lazy loading in the registration to prevent import errors in environments where Isaac Lab dependencies (like `pxr`) are not fully available.
 - **Robust Integration**: The `ARCProEnv` class safely checks for the `enable_hud` flag before initializing the HUD, ensuring that headless runs or environments without `omni.ui` can still function normally.
+
+### Diagnostics
+- **Verify Config is Respected**: Check the console log for "ARCProEnv: HUD enabled by config." or "ARCProEnv: HUD disabled by config." to confirm the `enable_hud` flag is being read correctly on startup.
+- **Debug Environment Initialization**: Set a breakpoint in `arcpro_env.py` within the `ARCProEnv.__init__` method to inspect the `self.cfg` object and ensure the configuration has been loaded as expected.
 
 ### Verification Results
 - **Unit Tests**: Updated `src/examples/ARCPro_RL/arc_rl_isacc_sim/arcproLab/mdp/tests/test_hud.py` to include environment integration tests.
