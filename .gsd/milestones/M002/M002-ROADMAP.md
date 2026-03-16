@@ -10,7 +10,7 @@
 
 ## Slices
 
-- [ ] **S01: USD World & Robot Sizing Debugging.** `risk:high` `depends:[]`
+- [x] **S01: USD World & Robot Sizing Debugging.** `risk:high` `depends:[]`
   > After this: We are certain the robot fits on the track, does not clip, and the spawn coordinates are correct.
 - [ ] **S02: Vectorized Lap Counting in TrackManager.** `risk:medium` `depends:[S01]`
   > After this: TrackManager correctly tracks laps and handles wrap-around without loops.
