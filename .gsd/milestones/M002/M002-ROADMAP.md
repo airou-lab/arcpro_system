@@ -13,7 +13,7 @@
 - [x] **S01: USD World & Robot Sizing Debugging.** `risk:high` `depends:[]`
   > After this: We are certain the robot fits on the track, does not clip, and the spawn coordinates are correct.
 - [ ] **S02: Vectorized Lap Counting in TrackManager.** `risk:medium` `depends:[S01]`
-  > After this: TrackManager correctly tracks laps and handles wrap-around without loops.
+  > After this: TrackManager correctly tracks laps and handles wrap-around without loops. The fallback straight line is updated to match the new origin-centered track.
 - [ ] **S03: Isaac Lab 2.0 HUD Overlay (omni.ui).** `risk:medium` `depends:[S02]`
   > After this: HUD displays real-time telemetry over the simulation.
 - [ ] **S04: 10-lap Autonomous Verification.** `risk:medium` `depends:[S03]`
