@@ -6,112 +6,228 @@ import os
 import json
 import glob
 import time
-import random
 
-def exit_with_error(reason, details=None):
-    error_output = {
+# 1. Dependency Checks & AppLauncher Setup
+try:
+    import torch
+except ImportError:
+    print(json.dumps({"status": "error", "reason": "torch not found"}, indent=2), file=sys.stderr)
+    sys.exit(1)
+
+try:
+    from isaaclab.app import AppLauncher
+except ImportError:
+    # Fail loudly if Isaac Lab is missing
+    error_msg = {
         "status": "error",
-        "reason": reason,
+        "reason": "Isaac Lab not found. Please run this script through ./isaaclab.sh python scripts/verify_policy.py",
     }
-    if details:
-        error_output["details"] = details
-    
-    print(json.dumps(error_output, indent=2), file=sys.stderr)
+    print(json.dumps(error_msg, indent=2), file=sys.stderr)
+    sys.exit(1)
+
+# Add argparse arguments for Isaac Lab
+parser = argparse.ArgumentParser(description='Run physical verification of the trained policy using Isaac Lab.')
+parser.add_argument('--checkpoint-dir', type=str, default='logs/rsl_rl/arcpro_retraining',
+                    help='Directory containing the trained policy checkpoints.')
+parser.add_argument('--laps', type=int, default=10, help='Number of laps to run')
+parser.add_argument('--device', type=str, default='cuda:0', help='Device to run on')
+AppLauncher.add_app_launcher_args(parser)
+args_cli = parser.parse_args()
+
+# Launch simulation app (headless is often preferred for verification)
+app_launcher = AppLauncher(args_cli)
+simulation_app = app_launcher.app
+
+# 2. Environment & Model Imports
+import gymnasium as gym
+import numpy as np
+
+# Ensure src is in the python path for imports
+sys.path.append(os.path.join(os.getcwd(), "src"))
+
+try:
+    import examples.ARCPro_RL.arc_rl_isacc_sim.arcproLab as arcpro_lab
+    from examples.ARCPro_RL.arc_rl_isacc_sim.arcproLab.mdp.track_manager import get_track_manager
+except ImportError as e:
+    print(json.dumps({
+        "status": "error",
+        "reason": f"Failed to import ARCPro environment components: {e}",
+    }, indent=2), file=sys.stderr)
+    simulation_app.close()
     sys.exit(1)
 
 def find_best_checkpoint(checkpoint_dir):
-    """
-    Finds the best checkpoint in the given directory.
-    Assumes checkpoints are named with .pt extension and we prefer 'model_*.pt'.
-    If 'model_*.pt' exist, pick the one with the highest iteration number.
-    """
+    """Finds the latest/best checkpoint in the directory."""
     if not os.path.exists(checkpoint_dir):
-        exit_with_error("Checkpoint directory does not exist", {"checkpoint_dir": checkpoint_dir})
-    
-    # Try finding any .pt files
+        return None
     pt_files = glob.glob(os.path.join(checkpoint_dir, "*.pt"))
     if not pt_files:
-        exit_with_error("No checkpoints found in directory", {"checkpoint_dir": checkpoint_dir})
-    
-    # Look for model_*.pt and sort by number if possible
+        return None
+    # Prioritize model_*.pt
     model_files = [f for f in pt_files if "model_" in os.path.basename(f)]
     if model_files:
         try:
-            # Extract number from 'model_123.pt'
             model_files.sort(key=lambda x: int(os.path.basename(x).split('_')[1].split('.')[0]))
             return model_files[-1]
-        except (IndexError, ValueError):
-            # Fallback to standard sorting if naming convention is different
+        except:
             model_files.sort()
             return model_files[-1]
-    
-    # If no model_*.pt, just return the latest by modification time or lexicographically
     pt_files.sort(key=os.path.getmtime)
     return pt_files[-1]
 
-def run_lap(lap_number, max_allowed_error=0.3, induce_crash=False, induce_error=False):
-    print(f"Lap {lap_number} start")
+def load_policy(checkpoint_path, num_obs, num_actions, device):
+    """Loads rsl_rl policy from checkpoint."""
+    try:
+        # Check for rsl_rl dependency
+        from rsl_rl.modules import ActorCritic
+    except ImportError:
+        print(json.dumps({"status": "error", "reason": "rsl_rl dependency not found"}, indent=2), file=sys.stderr)
+        return None
+
+    print(f"Loading checkpoint: {checkpoint_path}")
+    checkpoint = torch.load(checkpoint_path, map_location=device)
     
-    # Simulate lap time
-    time.sleep(0.01)
+    # Policy architecture (hardcoded to standard RSL_RL MLP for ARCPro)
+    actor_critic = ActorCritic(
+        num_obs=num_obs,
+        num_privileged_obs=0,
+        num_actions=num_actions,
+        actor_hidden_dims=[512, 256, 128],
+        critic_hidden_dims=[512, 256, 128],
+        activation='elu'
+    ).to(device)
     
-    if induce_crash and lap_number == 5:
-        exit_with_error("Robot crashed", {"lap": lap_number})
-        
-    # Simulate lateral error
-    if induce_error and lap_number == 8:
-        max_error = 0.35
+    # rsl_rl typically saves weights under 'model_state_dict'
+    if 'model_state_dict' in checkpoint:
+        actor_critic.load_state_dict(checkpoint['model_state_dict'])
     else:
-        max_error = random.uniform(0.05, 0.25)
+        # Fallback to direct state dict if available
+        actor_critic.load_state_dict(checkpoint)
         
-    lap_time = random.uniform(2.5, 3.5)
-    
-    print(f"Lap {lap_number} end")
-    
-    return {
-        "lap": lap_number,
-        "max_lateral_error": max_error,
-        "time": lap_time
-    }
+    actor_critic.eval()
+    return actor_critic
 
 def main():
-    parser = argparse.ArgumentParser(description='Run the verification policy.')
-    parser.add_argument('--checkpoint-dir', type=str, default='logs/rsl_rl/arcpro_retraining',
-                        help='Directory containing the trained policy checkpoints.')
-    parser.add_argument('--laps', type=int, default=10, help='Number of laps to run')
-    parser.add_argument('--induce-crash', action='store_true', help='Simulate a crash during the run')
-    parser.add_argument('--induce-error', action='store_true', help='Simulate an unacceptable lateral error')
-    args = parser.parse_args()
+    # Create environment configuration
+    env_cfg = arcpro_lab.arcpro_env_cfg.ARCProEnvCfg()
+    env_cfg.scene.num_envs = 1  # Single environment for verification
+    env_cfg.enable_hud = False  # Disable HUD for headless verification
+    
+    try:
+        env = gym.make("ARCPro-v0", cfg=env_cfg)
+    except Exception as e:
+        print(json.dumps({"status": "error", "reason": f"Failed to instantiate environment: {e}"}, indent=2), file=sys.stderr)
+        simulation_app.close()
+        sys.exit(1)
 
-    # Load the best checkpoint
-    best_checkpoint = find_best_checkpoint(args.checkpoint_dir)
-    print(f"Loaded best checkpoint: {best_checkpoint}")
+    # Load the best available policy checkpoint
+    checkpoint_path = find_best_checkpoint(args_cli.checkpoint_dir)
+    if not checkpoint_path:
+        print(json.dumps({"status": "error", "reason": "No policy checkpoint found in directory", "details": {"dir": args_cli.checkpoint_dir}}, indent=2), file=sys.stderr)
+        env.close()
+        simulation_app.close()
+        sys.exit(1)
+
+    policy = load_policy(checkpoint_path, env.num_obs, env.num_actions, args_cli.device)
+    if not policy:
+        env.close()
+        simulation_app.close()
+        sys.exit(1)
+
+    # Physical Verification Loop
+    obs, _ = env.reset()
+    tm = get_track_manager(device=args_cli.device)
+    tm.reset_laps(torch.tensor([0], device=args_cli.device))
     
     telemetry = []
     total_time = 0
     max_lateral_error_run = 0
+    current_lap = 0
+    lap_start_time = time.time()
     
-    for i in range(1, args.laps + 1):
-        lap_metrics = run_lap(i, induce_crash=args.induce_crash, induce_error=args.induce_error)
-        telemetry.append(lap_metrics)
-        total_time += lap_metrics["time"]
-        if lap_metrics["max_lateral_error"] > max_lateral_error_run:
-            max_lateral_error_run = lap_metrics["max_lateral_error"]
-            
-        if lap_metrics["max_lateral_error"] > 0.3:
-            exit_with_error("Lateral error exceeded 0.3m", {"lap": i, "error": lap_metrics["max_lateral_error"]})
+    print(f"Verification started: Goal is {args_cli.laps} laps, LatErr < 0.3m")
 
+    try:
+        while current_lap < args_cli.laps:
+            # Inference
+            with torch.no_grad():
+                actions = policy.act_inference(obs)
+                
+            # Physics Step
+            obs, rewards, terminated, truncated, info = env.step(actions)
+            
+            # Extract state for telemetry
+            robot_pos = env.scene["robot"].data.root_pos_w
+            robot_quat = env.scene["robot"].data.root_quat_w
+            
+            # Compute yaw for lateral error calculation
+            # q = [qw, qx, qy, qz]
+            yaw = torch.atan2(2.0 * (robot_quat[:, 0] * robot_quat[:, 3] + robot_quat[:, 1] * robot_quat[:, 2]), 
+                              1.0 - 2.0 * (robot_quat[:, 2]**2 + robot_quat[:, 3]**2))
+            
+            lat_err, _ = tm.compute_errors(robot_pos, yaw)
+            abs_lat_err = torch.abs(lat_err[0]).item()
+            
+            if abs_lat_err > max_lateral_error_run:
+                max_lateral_error_run = abs_lat_err
+                
+            # Enforce lateral error bound (Requirement R002)
+            if abs_lat_err > 0.3:
+                failure_msg = {
+                    "status": "failure",
+                    "reason": "Lateral error exceeded 0.3m bound",
+                    "details": {"lap": current_lap + 1, "error": abs_lat_err}
+                }
+                print(json.dumps(failure_msg, indent=2), file=sys.stderr)
+                env.close()
+                simulation_app.close()
+                sys.exit(1)
+                
+            # Update lap counts
+            laps = tm.update_laps(robot_pos)
+            if laps[0] > current_lap:
+                lap_end_time = time.time()
+                lap_duration = lap_end_time - lap_start_time
+                current_lap = laps[0].item()
+                
+                lap_metrics = {
+                    "lap": current_lap,
+                    "max_lateral_error": abs_lat_err, 
+                    "time": lap_duration
+                }
+                telemetry.append(lap_metrics)
+                total_time += lap_duration
+                lap_start_time = lap_end_time
+                print(f"Lap {current_lap} completed: time={lap_duration:.2f}s, lat_err={abs_lat_err:.4f}m")
+
+            # Check for crashes/termination
+            if terminated.any() or truncated.any():
+                failure_msg = {
+                    "status": "failure",
+                    "reason": "Robot crashed or left track area",
+                    "details": {"lap": current_lap + 1}
+                }
+                print(json.dumps(failure_msg, indent=2), file=sys.stderr)
+                env.close()
+                simulation_app.close()
+                sys.exit(1)
+
+    except KeyboardInterrupt:
+        print("Verification interrupted by user.")
+    
+    # Final Result
     summary = {
         "status": "success",
-        "total_laps": args.laps,
+        "total_laps": current_lap,
         "total_time": total_time,
         "max_lateral_error": max_lateral_error_run,
         "laps": telemetry
     }
     
-    # Print telemetry JSON output
     print(json.dumps(summary, indent=2))
     
+    env.close()
+    simulation_app.close()
     sys.exit(0)
 
 if __name__ == '__main__':
