@@ -2,7 +2,7 @@ For full documentation please visit the docs site: https://airou-lab.github.io/g
 
 To clone run:
 ```bash
-git clone --recurse-submodules -j8  git@github.com:airou-lab/arcpro_system.git
+git clone -j8 --recurse-submodules=':!src/examples' git@github.com:airou-lab/arcpro_system.git
 ```
 
 (To add build passing tags)
